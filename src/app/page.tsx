@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import axios from "axios";
+import { useCreatePaymentMutation } from "./store/payment/payment.api";
 
 type Item = {
   id: string;
@@ -17,30 +17,23 @@ const items: Item[] = [
 
 export default function Home() {
   const [loading, setLoading] = useState<string | null>(null);
+  const [createPayment] = useCreatePaymentMutation();
 
   const handleBuy = async (item: Item) => {
     setLoading(item.id);
+
     try {
-      const { data } = await axios.post(
-        "https://site--uc-shop-server--69z8m7t7vlwy.code.run/payments/create",
-        {
-          orderId: `order-${Date.now()}`,
-          amount: item.price,
-        },
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true, // send cookies
-        }
-      );
+      const result = await createPayment({
+        orderId: `order-${Date.now()}`,
+        amount: item.price,
+      }).unwrap();
 
-      console.log(data);
-
-      if (!data.url) {
+      if (!result.url) {
         alert("Payment URL not received from server");
         return;
       }
 
-      window.location.href = data.url; // redirect to Paysera
+      window.location.href = result.url;
     } catch (err) {
       console.error(err);
       alert("Failed to start payment.");
