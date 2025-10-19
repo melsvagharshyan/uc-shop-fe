@@ -22,7 +22,7 @@ export default function Home() {
     setLoading(item.id);
     try {
       const { data } = await axios.post(
-        "https://site--uc-shop-be--69z8m7t7vlwy.code.run/payments/create",
+        "https://site--uc-shop-server--69z8m7t7vlwy.code.run/payments/create",
         {
           orderId: `order-${Date.now()}`,
           amount: item.price,
