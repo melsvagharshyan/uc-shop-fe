@@ -10,7 +10,6 @@ const paymentApi = api.injectEndpoints({
         url: "/payments/create",
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body,
       }),
     }),
