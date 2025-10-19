@@ -20,14 +20,17 @@ export default function Home() {
   const handleBuy = async (item: Item) => {
     setLoading(item.id);
     try {
-      const res = await fetch("http://localhost:5111/payments/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          orderId: `order-${Date.now()}`,
-          amount: item.price,
-        }),
-      });
+      const res = await fetch(
+        "https://site--uc-shop-be--69z8m7t7vlwy.code.run/payments/create",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId: `order-${Date.now()}`,
+            amount: item.price,
+          }),
+        }
+      );
 
       const data = await res.json();
       console.log(data);
