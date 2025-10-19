@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import axios from "axios";
 
 type Item = {
   id: string;
@@ -20,19 +21,18 @@ export default function Home() {
   const handleBuy = async (item: Item) => {
     setLoading(item.id);
     try {
-      const res = await fetch(
+      const { data } = await axios.post(
         "https://site--uc-shop-be--69z8m7t7vlwy.code.run/payments/create",
         {
-          method: "POST",
+          orderId: `order-${Date.now()}`,
+          amount: item.price,
+        },
+        {
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            orderId: `order-${Date.now()}`,
-            amount: item.price,
-          }),
+          withCredentials: true, // send cookies
         }
       );
 
-      const data = await res.json();
       console.log(data);
 
       if (!data.url) {
@@ -42,6 +42,7 @@ export default function Home() {
 
       window.location.href = data.url; // redirect to Paysera
     } catch (err) {
+      console.error(err);
       alert("Failed to start payment.");
     } finally {
       setLoading(null);
